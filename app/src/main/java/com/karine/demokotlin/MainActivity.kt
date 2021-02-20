@@ -1,6 +1,7 @@
 package com.karine.demokotlin
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,11 +11,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
     var fullName = ""
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mainBinding.root
         setContentView(view)
+        val preferencesReader = getSharedPreferences("com.karine.demokotlin", MODE_PRIVATE)
+        fullName = preferencesReader.getString("User fullName", "").toString()
+        welcomeUser()
     }
 
     @SuppressLint("SetTextI18n")
@@ -23,6 +28,9 @@ class MainActivity : AppCompatActivity() {
         val lastName = mainBinding.lastNameField.text
         if (firstName.length > 0 && lastName.length > 0) {
             fullName = "$firstName $lastName"
+            val sharedPreferences = getSharedPreferences("com.karine.demokotlin", MODE_PRIVATE).edit()
+           sharedPreferences.putString("User fullName", fullName)
+            sharedPreferences.apply()
         }else {
             fullName = ""
         }
